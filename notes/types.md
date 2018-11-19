@@ -62,4 +62,4 @@
 * Bounded
 * Num: is a numeric typeclass. Num includes all numbers, including real numbers and integral numbers,
 * Integral: includes only integral (whole) numbers
-* Float
+* Floating
