@@ -102,6 +102,9 @@ ghci> :t firstName
 firstName :: Person -> String
 ```
 ***but what if we have name collision with the automatically created name ,like firstName from different type ??????***
+> it will be the newly created name
+
+![](./images/type-value-constructor.png)
 
 
 ```
@@ -112,3 +115,21 @@ Car {company = "Ford", model = "Mustang", year = 1967}
 ```
 > When making a new car, we don't have to necessarily put the fields in the proper order, as long as we list all of them. But if we
 don't use record syntax, we have to specify them in order.
+
+
+
+# Type parameter
+```
+data Vector a = Vector a a a deriving (Show)  
+  
+vplus :: (Num t) => Vector t -> Vector t -> Vector t  
+(Vector i j k) `vplus` (Vector l m n) = Vector (i+l) (j+m) (k+n) 
+
+ghci> Vector 3 5 8 `vplus` Vector 9 2 8  
+Vector 12 7 16  
+
+ghci> Vector 3 5 8 `vplus` Vector 9 2 8 `vplus` Vector 0 2 3  
+Vector 12 9 19  
+```
+
+>  it's very important to distinguish between the type constructor and the value constructor. When declaring a data type, the part before the = is the type constructor and the constructors after it (possibly separated by |'s) are value constructors. Giving a function a type of Vector t t t -> Vector t t t -> t would be wrong, because we have to put types in type declaration and the vector type constructor takes only one parameter, whereas the value constructor takes three. Let's play around with our vectors.
