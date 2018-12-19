@@ -19,21 +19,17 @@ dispatch = [ ("add", add)
             ,("remove", remove)
             ]
 
-
-
-
 main = do
     -- [command:args] <- getArgs
     (command:args) <- getArgs
     let (Just action) = lookup command dispatch
     action args
 
-
-
 -- add filePath itemContent
 add :: [String] -> IO ()
 add [filePath,todo] = appendFile filePath (todo ++ "\n")
 
+-- view filePaht
 view :: [String] -> IO ()
 view [filePath] = do
     handle <- openFile filePath ReadMode
@@ -42,6 +38,20 @@ view [filePath] = do
         numberedLines = zipWith (\n line -> show n ++ " - " ++ line) [0..] fileLines 
     putStr $ unlines numberedLines
 
+-- remove filePath index
 remove :: [String] -> IO ()
 remove [filePath,index] = do
+    handle <- openFile filePath ReadMode
+    (tempName, tempHandle) <- openTempFile "." "temp"
+    contents <- hGetContents handle
+    let numberIndex = read index 
+        todoList = lines contents
+        deletedList = delete (todoList !! numberIndex) todoList
+    hPutStr tempHandle $ unlines deletedList
+    hClose handle
+    hClose tempHandle
+    removeFile filePath
+    renameFile tempName filePath 
+        
+
     
